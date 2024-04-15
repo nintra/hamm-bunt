@@ -1,0 +1,7 @@
+{
+    email admin@logi.codes
+}
+
+chat.hamm-bunt.de {
+    reverse_proxy mattermost:80
+}
