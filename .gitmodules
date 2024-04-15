@@ -1,0 +1,3 @@
+[submodule "website/kirby"]
+	path = website/kirby
+	url = https://github.com/getkirby/starterkit.git
