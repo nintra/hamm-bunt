@@ -5,3 +5,21 @@
 chat.hamm-bunt.de {
     reverse_proxy mattermost:80
 }
+
+(common) {
+    php_fastcgi php:9000
+    file_server
+}
+
+(kirby) {
+    @blocked {
+        path *.txt *.md /content/* /site/* /kirby/* /.*
+    }
+    redir @blocked /
+}
+
+hamm-bunt.de {
+    import common
+    import kirby
+    root * /usr/share/kirby
+}

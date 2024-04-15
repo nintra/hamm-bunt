@@ -19,6 +19,7 @@ services:
             - ./Caddyfile:/etc/caddy/Caddyfile
             - caddy_data:/data
             - caddy_config:/config
+            - ./website/kirby:/usr/share/kirby
 
     postgres:
         image: postgres:${POSTGRES_IMAGE_TAG}
@@ -80,6 +81,18 @@ services:
             - ${APP_PORT}:8065
             - ${CALLS_PORT}:${CALLS_PORT}/udp
             - ${CALLS_PORT}:${CALLS_PORT}/tcp
+
+    website:
+        build: ./website/
+        container_name: website
+        ports:
+            - 80
+            - 9000
+        volumes:
+            - ./website/kirby:/var/www/html/
+            - ./website/php.ini-production:/usr/local/etc/php/php.ini
+        env_file:
+            - ./website/id.env
 
 volumes:
     caddy_data:
