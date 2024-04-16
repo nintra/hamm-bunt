@@ -22,9 +22,5 @@ localhost:3000 {
 
 # chat.hamm-bunt.de
 localhost:3001 {
-	reverse_proxy mattermost:8065
-}
-
-localhost:3002 {
-	reverse_proxy mattermost:8443
+	reverse_proxy rocketchat:3000
 }

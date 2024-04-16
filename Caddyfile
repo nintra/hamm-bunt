@@ -23,5 +23,5 @@ hamm-bunt.de {
 }
 
 chat.hamm-bunt.de {
-	reverse_proxy mattermost:8065
+	reverse_proxy rocketchat:3000
 }

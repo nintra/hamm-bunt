@@ -20,67 +20,99 @@ services:
             - caddy_config:/config
             - ./website/kirby:/usr/share/kirby
 
-    postgres:
-        image: postgres:${POSTGRES_IMAGE_TAG}
-        restart: ${RESTART_POLICY}
-        security_opt:
-            - no-new-privileges:true
-        pids_limit: 100
-        read_only: true
-        tmpfs:
-            - /tmp
-            - /var/run/postgresql
-        volumes:
-            - db:/var/lib/postgresql/data
+    # postgres:
+    #     image: postgres:${POSTGRES_IMAGE_TAG}
+    #     restart: ${RESTART_POLICY}
+    #     security_opt:
+    #         - no-new-privileges:true
+    #     pids_limit: 100
+    #     read_only: true
+    #     tmpfs:
+    #         - /tmp
+    #         - /var/run/postgresql
+    #     volumes:
+    #         - db:/var/lib/postgresql/data
+    #     environment:
+    #         # timezone inside container
+    #         - TZ
+
+    #         # necessary Postgres options/variables
+    #         - POSTGRES_USER
+    #         - POSTGRES_PASSWORD
+    #         - POSTGRES_DB
+
+    # mattermost:
+    #     hostname: mattermost
+    #     depends_on:
+    #         - postgres
+    #     image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
+    #     restart: ${RESTART_POLICY}
+    #     security_opt:
+    #         - no-new-privileges:true
+    #     pids_limit: 200
+    #     read_only: ${MATTERMOST_CONTAINER_READONLY}
+    #     tmpfs:
+    #         - /tmp
+    #     volumes:
+    #         - mattermost:/mattermost/
+    #     environment:
+    #         # timezone inside container
+    #         - TZ
+
+    #         # necessary Mattermost options/variables (see env.example)
+    #         - MM_SQLSETTINGS_DRIVERNAME
+    #         - MM_SQLSETTINGS_DATASOURCE
+
+    #         # necessary for bleve
+    #         - MM_BLEVESETTINGS_INDEXDIR
+
+    #         # additional settings
+    #         - MM_SERVICESETTINGS_SITEURL
+
+    #         # smtp
+    #         - MM_EMAILSETTINGS_ENABLESMTPAUTH
+    #         - MM_EMAILSETTINGS_SMTPUSERNAME
+    #         - MM_EMAILSETTINGS_SMTPPASSWORD
+    #         - MM_EMAILSETTINGS_SMTPSERVER
+    #         - MM_EMAILSETTINGS_SMTPPORT
+    #         - MM_EMAILSETTINGS_SMTPSERVERTIMEOUT
+    #         - MM_EMAILSETTINGS_CONNECTIONSECURITY
+    #     ports:
+    #         - 8065:8065
+    #         - 8443:8443/udp
+    #         - 8443:8443/tcp
+    rocketchat:
+        image: registry.rocket.chat/rocketchat/rocket.chat:${RELEASE:-latest}
+        restart: always
         environment:
-            # timezone inside container
-            - TZ
-
-            # necessary Postgres options/variables
-            - POSTGRES_USER
-            - POSTGRES_PASSWORD
-            - POSTGRES_DB
-
-    mattermost:
-        hostname: mattermost
+            MONGO_URL: "${MONGO_URL:-mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/${MONGODB_DATABASE:-rocketchat}?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}"
+            MONGO_OPLOG_URL: "${MONGO_OPLOG_URL:-mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/local?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}"
+            ROOT_URL: ${ROOT_URL:-http://localhost:${HOST_PORT:-3000}}
+            PORT: ${PORT:-3000}
+            DEPLOY_METHOD: docker
+            DEPLOY_PLATFORM: ${DEPLOY_PLATFORM:-}
+            REG_TOKEN: ${REG_TOKEN:-}
         depends_on:
-            - postgres
-        image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
-        restart: ${RESTART_POLICY}
-        security_opt:
-            - no-new-privileges:true
-        pids_limit: 200
-        read_only: ${MATTERMOST_CONTAINER_READONLY}
-        tmpfs:
-            - /tmp
+            - mongodb
+        expose:
+            - ${PORT:-3000}
+        # ports:
+        #     - "${BIND_IP:-0.0.0.0}:${HOST_PORT:-3000}:${PORT:-3000}"
+
+    mongodb:
+        image: docker.io/bitnami/mongodb:${MONGODB_VERSION:-5.0}
+        restart: always
         volumes:
-            - mattermost:/mattermost/
+            - mongodb_data:/bitnami/mongodb
         environment:
-            # timezone inside container
-            - TZ
-
-            # necessary Mattermost options/variables (see env.example)
-            - MM_SQLSETTINGS_DRIVERNAME
-            - MM_SQLSETTINGS_DATASOURCE
-
-            # necessary for bleve
-            - MM_BLEVESETTINGS_INDEXDIR
-
-            # additional settings
-            - MM_SERVICESETTINGS_SITEURL
-
-            # smtp
-            - MM_EMAILSETTINGS_ENABLESMTPAUTH
-            - MM_EMAILSETTINGS_SMTPUSERNAME
-            - MM_EMAILSETTINGS_SMTPPASSWORD
-            - MM_EMAILSETTINGS_SMTPSERVER
-            - MM_EMAILSETTINGS_SMTPPORT
-            - MM_EMAILSETTINGS_SMTPSERVERTIMEOUT
-            - MM_EMAILSETTINGS_CONNECTIONSECURITY
-        ports:
-            - 8065:8065
-            - 8443:8443/udp
-            - 8443:8443/tcp
+            MONGODB_REPLICA_SET_MODE: primary
+            MONGODB_REPLICA_SET_NAME: ${MONGODB_REPLICA_SET_NAME:-rs0}
+            MONGODB_PORT_NUMBER: ${MONGODB_PORT_NUMBER:-27017}
+            MONGODB_INITIAL_PRIMARY_HOST: ${MONGODB_INITIAL_PRIMARY_HOST:-mongodb}
+            MONGODB_INITIAL_PRIMARY_PORT_NUMBER: ${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}
+            MONGODB_ADVERTISED_HOSTNAME: ${MONGODB_ADVERTISED_HOSTNAME:-mongodb}
+            MONGODB_ENABLE_JOURNAL: ${MONGODB_ENABLE_JOURNAL:-true}
+            ALLOW_EMPTY_PASSWORD: ${ALLOW_EMPTY_PASSWORD:-yes}
 
     website:
         build: ./website/
@@ -97,6 +129,7 @@ services:
 
 volumes:
     caddy_data:
-    caddy_config:
-    mattermost:
-    db:
+    caddy_config: # mattermost:
+
+    # db:
+    mongodb_data: { driver: local }
