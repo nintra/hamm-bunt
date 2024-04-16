@@ -26,6 +26,9 @@ chat.hamm-bunt.de {
 	reverse_proxy mattermost:8065
 }
 
-chat.hamm-bunt.de:8443 {
-	reverse_proxy mattermost:8443
+wss://chat.hamm-bunt.de {
+	reverse_proxy / mattermost:8443 {
+		websocket
+		transparent
+	}
 }

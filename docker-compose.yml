@@ -93,6 +93,7 @@ services:
 
     website:
         build: ./website/
+        restart: unless-stopped
         ports:
             # - 80
             - "9000:9000"
