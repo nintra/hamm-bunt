@@ -77,6 +77,15 @@ services:
 
             # additional settings
             - MM_SERVICESETTINGS_SITEURL
+
+            # smtp
+            - MM_EMAILSETTINGS_ENABLESMTPAUTH
+            - MM_EMAILSETTINGS_SMTPUSERNAME
+            - MM_EMAILSETTINGS_SMTPPASSWORD
+            - MM_EMAILSETTINGS_SMTPSERVER
+            - MM_EMAILSETTINGS_SMTPPORT
+            - MM_EMAILSETTINGS_SMTPSERVERTIMEOUT
+            - MM_EMAILSETTINGS_CONNECTIONSECURITY
         ports:
             - 8065:8065
             - 8443:8443/udp
