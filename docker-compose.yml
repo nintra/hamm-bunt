@@ -54,7 +54,7 @@ services:
         tmpfs:
             - /tmp
         volumes:
-            - mattermost_data:/mattermost/
+            - mattermost:/mattermost/
         environment:
             # timezone inside container
             - TZ
