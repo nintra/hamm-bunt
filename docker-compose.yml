@@ -1,9 +1,8 @@
 version: "3.7"
 
 services:
-    caddy:
-        hostname: caddy
-        container_name: caddy
+    proxy:
+        hostname: proxy
         image: caddy:2.7.5-alpine
         restart: unless-stopped
         cap_add:
@@ -43,6 +42,7 @@ services:
             - POSTGRES_DB
 
     mattermost:
+        hostname: mattermost
         depends_on:
             - postgres
         image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
@@ -78,30 +78,22 @@ services:
             # additional settings
             - MM_SERVICESETTINGS_SITEURL
         ports:
-            - ${APP_PORT}:8065
-            - ${CALLS_PORT}:${CALLS_PORT}/udp
-            - ${CALLS_PORT}:${CALLS_PORT}/tcp
+            - 8065:8065
+            - 8443:8443/udp
+            - 8443:8443/tcp
 
     website:
         build: ./website/
-        container_name: website
         ports:
-            - 80
-            - 9000
+            # - 80
+            - "9000:9000"
         volumes:
             - ./website/kirby:/var/www/html/
+            - ./website/config:/var/www/html/kirby/site/config
             - ./website/php.ini-production:/usr/local/etc/php/php.ini
-        env_file:
-            - ./website/id.env
+        # env_file:
+        #     - ./website/id.env
 
 volumes:
     caddy_data:
-    caddy_config: # Shared volume for Let's Encrypt certificate renewal with a webroot
-
-    shared-webroot:
-        name: shared-webroot
-
-# This network name is being used for Let's Encrypt certificate renewal
-networks:
-    default:
-        name: mattermost
+    caddy_config:

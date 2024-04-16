@@ -1,9 +1,8 @@
-FROM php:8.2-cli
+FROM php:8.2-fpm-alpine
+# RUN apt-get update && apt-get install -y git nano curl
+RUN apk update && apk add --no-cache libxml2-dev nano git curl
 
-RUN apt-get update && apt-get install -y git nano curl
+RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
+    gd xdebug ctype curl dom filter hash iconv json libxml mbstring openssl SimpleXML exif fileinfo intl memcached zip zlib
 
-ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN install-php-extensions gd xdebug ctype curl dom filter hash iconv json libxml mbstring openssl SimpleXML exif fileinfo intl memcached zip zlib
-
-WORKDIR /app/
-RUN chown -R application:application /app/
+WORKDIR /var/www/html/

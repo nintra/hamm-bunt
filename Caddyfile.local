@@ -2,10 +2,8 @@
 	email admin@logi.codes
 }
 
-hamm-bunt.de {
-	basicauth {
-		zusammen $2a$14$.fyTEX4kISJWzpV0ogn9pOOHf26GUOdvOo/StT644fcB2vC7KVnJq
-	}
+# hamm-bunt.de
+localhost:3000 {
 	encode gzip
 
 	root * /usr/share/kirby
@@ -22,10 +20,11 @@ hamm-bunt.de {
 	file_server
 }
 
-chat.hamm-bunt.de {
+# chat.hamm-bunt.de
+localhost:3001 {
 	reverse_proxy mattermost:8065
 }
 
-chat.hamm-bunt.de:8443 {
+localhost:3002 {
 	reverse_proxy mattermost:8443
 }
