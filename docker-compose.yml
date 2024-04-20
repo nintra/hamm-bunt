@@ -18,69 +18,8 @@ services:
             - ./Caddyfile:/etc/caddy/Caddyfile
             - caddy_data:/data
             - caddy_config:/config
-            - ./website/kirby:/usr/share/kirby
+            - ./website/content:/usr/share/content
 
-    # postgres:
-    #     image: postgres:${POSTGRES_IMAGE_TAG}
-    #     restart: ${RESTART_POLICY}
-    #     security_opt:
-    #         - no-new-privileges:true
-    #     pids_limit: 100
-    #     read_only: true
-    #     tmpfs:
-    #         - /tmp
-    #         - /var/run/postgresql
-    #     volumes:
-    #         - db:/var/lib/postgresql/data
-    #     environment:
-    #         # timezone inside container
-    #         - TZ
-
-    #         # necessary Postgres options/variables
-    #         - POSTGRES_USER
-    #         - POSTGRES_PASSWORD
-    #         - POSTGRES_DB
-
-    # mattermost:
-    #     hostname: mattermost
-    #     depends_on:
-    #         - postgres
-    #     image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
-    #     restart: ${RESTART_POLICY}
-    #     security_opt:
-    #         - no-new-privileges:true
-    #     pids_limit: 200
-    #     read_only: ${MATTERMOST_CONTAINER_READONLY}
-    #     tmpfs:
-    #         - /tmp
-    #     volumes:
-    #         - mattermost:/mattermost/
-    #     environment:
-    #         # timezone inside container
-    #         - TZ
-
-    #         # necessary Mattermost options/variables (see env.example)
-    #         - MM_SQLSETTINGS_DRIVERNAME
-    #         - MM_SQLSETTINGS_DATASOURCE
-
-    #         # necessary for bleve
-    #         - MM_BLEVESETTINGS_INDEXDIR
-
-    #         # additional settings
-    #         - MM_SERVICESETTINGS_SITEURL
-
-    #         # smtp
-    #         - MM_EMAILSETTINGS_ENABLESMTPAUTH
-    #         - MM_EMAILSETTINGS_SMTPUSERNAME
-    #         - MM_EMAILSETTINGS_SMTPPASSWORD
-    #         - MM_EMAILSETTINGS_SMTPSERVER
-    #         - MM_EMAILSETTINGS_SMTPPORT
-    #         - MM_EMAILSETTINGS_SMTPSERVERTIMEOUT
-    #         - MM_EMAILSETTINGS_CONNECTIONSECURITY
-    #     ports:
-    #         - 8065:8065
-    #         - 8443:8443/udp
-    #         - 8443:8443/tcp
     rocketchat:
         image: registry.rocket.chat/rocketchat/rocket.chat:${RELEASE:-latest}
         restart: always
@@ -113,27 +52,6 @@ services:
             MONGODB_ADVERTISED_HOSTNAME: ${MONGODB_ADVERTISED_HOSTNAME:-mongodb}
             MONGODB_ENABLE_JOURNAL: ${MONGODB_ENABLE_JOURNAL:-true}
             ALLOW_EMPTY_PASSWORD: ${ALLOW_EMPTY_PASSWORD:-yes}
-        # element:
-        #     image: vectorim/element-web:latest
-        #     restart: unless-stopped
-        #     environment:
-        #         - VIRTUAL_HOST=element.example.com
-        #         - VIRTUAL_PORT=80
-        #     ports:
-        #         - "8008:80"
-
-        # website:
-        #     build: ./website/
-        #     restart: unless-stopped
-        #     ports:
-        #         # - 80
-        #         - "9000:9000"
-        #     volumes:
-        #         - ./website/kirby:/var/www/html/
-        #         - ./website/config:/var/www/html/kirby/site/config
-        #         - ./website/php.ini-production:/usr/local/etc/php/php.ini
-        # env_file:
-        #     - ./website/id.env
 
     ghost:
         image: ghost:5-alpine
@@ -157,7 +75,5 @@ services:
 volumes:
     caddy_data:
     caddy_config:
-    db_data: # mattermost:
-
-    # db:
+    db_data:
     mongodb_data: { driver: local }
