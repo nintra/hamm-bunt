@@ -67,6 +67,7 @@ services:
 
     database:
         image: mysql:8.0
+        hostname: database
         restart: unless-stopped
         env_file: website/.env.database
         volumes:
