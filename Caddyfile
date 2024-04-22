@@ -8,14 +8,14 @@ hamm-bunt.de {
 	}
 	encode gzip
 
-	root * /usr/share/kirby
+	root * /usr/share/content
 
-	php_fastcgi website:9000 {
-		root /var/www/html
+	reverse_proxy ghost:2368 {
+		header_up Host {host}
 	}
 
 	@blocked {
-		path *.txt *.md /content/* /site/* /kirby/* /.*
+		path *.txt *.md
 	}
 	redir @blocked /
 
