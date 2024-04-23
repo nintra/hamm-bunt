@@ -3,9 +3,9 @@
 }
 
 hamm-bunt.de {
-	basicauth {
-		zusammen $2a$14$hi1R8ntEjMdBzb1Xvg415uTk5epfqLe.pcwu9IPUtdJkTSrSpDa1y
-	}
+	# basicauth {
+	# zusammen $2a$14$hi1R8ntEjMdBzb1Xvg415uTk5epfqLe.pcwu9IPUtdJkTSrSpDa1y
+	# }
 	encode gzip
 
 	root * /usr/share/content
