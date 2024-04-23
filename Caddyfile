@@ -4,7 +4,7 @@
 
 hamm-bunt.de {
 	basicauth {
-		zusammen $2a$14$.fyTEX4kISJWzpV0ogn9pOOHf26GUOdvOo/StT644fcB2vC7KVnJq
+		zusammen $2a$14$hi1R8ntEjMdBzb1Xvg415uTk5epfqLe.pcwu9IPUtdJkTSrSpDa1y
 	}
 	encode gzip
 
