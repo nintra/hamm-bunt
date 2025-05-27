@@ -2,6 +2,10 @@
 	email admin@logi.codes
 }
 
+hammbunt.de {
+	redir https://hamm-bunt.de{uri}
+}
+
 hamm-bunt.de {
 	# basicauth {
 	# zusammen $2a$14$hi1R8ntEjMdBzb1Xvg415uTk5epfqLe.pcwu9IPUtdJkTSrSpDa1y
@@ -22,6 +26,6 @@ hamm-bunt.de {
 	file_server
 }
 
-chat.hamm-bunt.de {
-	reverse_proxy rocketchat:3000
-}
+# chat.hamm-bunt.de {
+# 	reverse_proxy rocketchat:3000
+# }
