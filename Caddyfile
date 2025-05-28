@@ -3,7 +3,7 @@
 }
 
 www.hammbunt.de, hammbunt.de, www.hamm-bunt.de {
-	redir https://hamm-bunt.de{uri}
+	redir https://hamm-bunt.de{uri} permanent
 }
 
 hamm-bunt.de {
